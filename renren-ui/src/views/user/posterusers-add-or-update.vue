@@ -1,8 +1,8 @@
 <template>
-  <el-dialog v-model="visible" :title="isEdit ? '修改' : '新增'" :close-on-click-modal="false" :close-on-press-escape="false">
+  <el-dialog v-model="visible" :title="isEdit ? '修改' : '新增'" :close-on-click-modal="true" :close-on-press-escape="false">
     <el-form :model="dataForm" :rules="rules" ref="dataFormRef" @keyup.enter="dataFormSubmitHandle" label-width="120px">
       <el-form-item label="用户ID" prop="id">
-        <el-input v-model="dataForm.id" placeholder="用户ID" :disabled="isEdit"></el-input>
+        <el-input v-model="dataForm.id" placeholder="用户ID" :disabled="false"></el-input>
       </el-form-item>
       <el-form-item label="用户身份" prop="identity">
         <el-input v-model="dataForm.identity" placeholder="用户身份"></el-input>
@@ -14,7 +14,7 @@
         <el-input v-model="dataForm.nickname" placeholder="用户昵称"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input v-model="dataForm.password" placeholder="密码" type="password"></el-input>
+        <el-input v-model="dataForm.password" placeholder="密码"></el-input>
       </el-form-item>
       <el-form-item label="是否为管理员" prop="isAdmin">
         <el-input v-model="dataForm.isAdmin" placeholder="是否为管理员"></el-input>
@@ -44,7 +44,7 @@ const dataFormRef = ref();
 const isEdit = ref(false);
 
 const dataForm = reactive({
-  id: '', identity: '', mobilePhoneNumber: '', nickname: '', password: '', isAdmin: '0', isOnline: '0', schoolId: ''
+  id: '', identity: '', mobilePhoneNumber: '', nickname: '', password: '', isAdmin: '', isOnline: '', schoolId: ''
 });
 
 const rules = reactive({
@@ -58,6 +58,7 @@ const rules = reactive({
   schoolId: [{ required: true, message: '必填项不能为空', trigger: 'blur' }]
 });
 
+// 初始化新增或修改
 const init = (edit: boolean, id?: number) => {
   visible.value = true;
   isEdit.value = edit;
@@ -65,19 +66,29 @@ const init = (edit: boolean, id?: number) => {
     dataForm.id = id.toString();
     getInfo(id);
   } else {
-    dataForm.id = ''; // 新增时清空id
+    // 新增时清空表单字段
+    dataForm.id = '';
+    dataForm.identity = '';
+    dataForm.mobilePhoneNumber = '';
+    dataForm.nickname = '';
+    dataForm.password = '';
+    dataForm.isAdmin = '';
+    dataForm.isOnline = '';
+    dataForm.schoolId = '';
   }
   if (dataFormRef.value) {
     dataFormRef.value.resetFields();
   }
 };
 
+// 获取编辑时的数据
 const getInfo = (id: number) => {
   baseService.get("/user/posterusers/" + id).then((res) => {
     Object.assign(dataForm, res.data);
   });
 };
 
+// 提交表单
 const dataFormSubmitHandle = () => {
   dataFormRef.value.validate((valid: boolean) => {
     if (!valid) {

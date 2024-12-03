@@ -1,16 +1,25 @@
 <template>
-  <el-dialog v-model="visible" :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false" :close-on-press-escape="false">
-    <el-form :model="dataForm" :rules="rules" ref="dataFormRef" @keyup.enter="dataFormSubmitHandle()" label-width="120px">
-          <el-form-item label="学号" prop="studentId">
-        <el-input v-model="dataForm.studentId" placeholder="学号"></el-input>
+  <el-dialog v-model="visible" :title="isEdit ? '修改' : '新增'" :close-on-click-modal="false" :close-on-press-escape="false">
+    <el-form
+      :model="dataForm"
+      :rules="rules"
+      ref="dataFormRef"
+      @keyup.enter="dataFormSubmitHandle"
+      label-width="120px"
+    >
+      <el-form-item label="用户ID" prop="id">
+        <el-input v-model="dataForm.id" placeholder="请输入用户ID" :disabled="isEdit"></el-input>
       </el-form-item>
-          <el-form-item label="家长ID" prop="parentsUid">
-        <el-input v-model="dataForm.parentsUid" placeholder="家长ID"></el-input>
+      <el-form-item label="学号" prop="studentId">
+        <el-input v-model="dataForm.studentId" placeholder="请输入学号"></el-input>
       </el-form-item>
-      </el-form>
+      <el-form-item label="家长ID" prop="parentsUid">
+        <el-input v-model="dataForm.parentsUid" placeholder="请输入家长ID"></el-input>
+      </el-form-item>
+    </el-form>
     <template #footer>
       <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" @click="dataFormSubmitHandle()">确定</el-button>
+      <el-button type="primary" @click="dataFormSubmitHandle">确定</el-button>
     </template>
   </el-dialog>
 </template>
@@ -19,60 +28,65 @@
 import { reactive, ref } from "vue";
 import baseService from "@/service/baseService";
 import { ElMessage } from "element-plus";
+
 const emit = defineEmits(["refreshDataList"]);
 
 const visible = ref(false);
 const dataFormRef = ref();
+const isEdit = ref(false); // 是否为修改操作
 
 const dataForm = reactive({
-  id: '',  studentId: '',  parentsUid: ''});
+  id: "",
+  studentId: "",
+  parentsUid: ""
+});
 
-const rules = ref({
-          studentId: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ],
-          parentsUid: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ]
-  });
+const rules = reactive({
+  id: [{ required: true, message: "用户ID不能为空", trigger: "blur" }],
+  studentId: [{ required: true, message: "学号不能为空", trigger: "blur" }],
+  parentsUid: [{ required: true, message: "家长ID不能为空", trigger: "blur" }]
+});
 
-const init = (id?: number) => {
+// 初始化弹窗：新增或修改
+const init = (edit: boolean, id?: number) => {
   visible.value = true;
-  dataForm.id = "";
+  isEdit.value = edit;
 
-  // 重置表单数据
+  // 清空表单数据
   if (dataFormRef.value) {
     dataFormRef.value.resetFields();
   }
 
-  if (id) {
-    getInfo(id);
+  if (edit && id) {
+    // 修改时加载数据
+    baseService.get(`/student/posterstudents/${id}`).then((res) => {
+      Object.assign(dataForm, res.data);
+    });
+  } else {
+    // 新增时清空表单
+    dataForm.id = "";
+    dataForm.studentId = "";
+    dataForm.parentsUid = "";
   }
 };
 
-// 获取信息
-const getInfo = (id: number) => {
-  baseService.get("/student/posterstudents/" + id).then((res) => {
-    Object.assign(dataForm, res.data);
-  });
-};
-
-// 表单提交
+// 提交表单：新增或修改
 const dataFormSubmitHandle = () => {
   dataFormRef.value.validate((valid: boolean) => {
-    if (!valid) {
-      return false;
-    }
-    (!dataForm.id ? baseService.post : baseService.put)("/student/posterstudents", dataForm).then((res) => {
-      ElMessage.success({
-        message: '成功',
-        duration: 500,
-        onClose: () => {
-          visible.value = false;
-          emit("refreshDataList");
-        }
+    if (!valid) return;
+
+    const method = isEdit.value ? baseService.put : baseService.post;
+    const url = "/student/posterstudents";
+
+    method(url, dataForm)
+      .then(() => {
+        ElMessage.success(`${isEdit.value ? "修改" : "新增"}成功`);
+        visible.value = false; // 关闭弹窗
+        emit("refreshDataList"); // 刷新列表
+      })
+      .catch((err) => {
+        ElMessage.error(err.message || "操作失败");
       });
-    });
   });
 };
 
