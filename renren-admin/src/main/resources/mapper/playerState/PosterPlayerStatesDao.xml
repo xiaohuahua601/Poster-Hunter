@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.playerState.dao.PosterPlayerStatesDao">
+
+    <resultMap type="io.renren.modules.playerState.entity.PosterPlayerStatesEntity" id="posterPlayerStatesMap">
+        <result property="id" column="id"/>
+        <result property="coins" column="coins"/>
+        <result property="hunterLevel" column="hunter_level"/>
+        <result property="hunterExp" column="hunter_exp"/>
+        <result property="posterCompleted" column="poster_completed"/>
+        <result property="morality" column="morality"/>
+        <result property="intelligence" column="intelligence"/>
+        <result property="physical" column="physical"/>
+        <result property="aesthetic" column="aesthetic"/>
+        <result property="labor" column="labor"/>
+        <result property="up" column="up"/>
+        <result property="down" column="down"/>
+        <result property="moveLeft" column="move_left"/>
+        <result property="moveRight" column="move_right"/>
+        <result property="interact" column="interact"/>
+        <result property="friendsUid" column="friends_uid"/>
+        <result property="volume" column="volume"/>
+        <result property="pickedPostersId" column="picked_posters_id"/>
+    </resultMap>
+
+
+</mapper>

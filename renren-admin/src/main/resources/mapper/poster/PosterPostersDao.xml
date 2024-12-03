@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.poster.dao.PosterPostersDao">
+
+    <resultMap type="io.renren.modules.poster.entity.PosterPostersEntity" id="posterPostersMap">
+        <result property="id" column="id"/>
+        <result property="schoolId" column="school_id"/>
+        <result property="title" column="title"/>
+        <result property="ownerUid" column="owner_uid"/>
+        <result property="pickerUid" column="picker_uid"/>
+        <result property="content" column="content"/>
+        <result property="isReceived" column="is_received"/>
+        <result property="bountyLevel" column="bounty_level"/>
+        <result property="postTime" column="post_time"/>
+        <result property="submitTime" column="submit_time"/>
+        <result property="coinsRemuneration" column="coins_remuneration"/>
+        <result property="expRemuneration" column="exp_remuneration"/>
+        <result property="isOfficial" column="is_official"/>
+        <result property="isPicked" column="is_picked"/>
+        <result property="isSubmitted" column="is_submitted"/>
+    </resultMap>
+
+
+</mapper>

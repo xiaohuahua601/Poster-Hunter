@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.question.dao.PosterQuestionsDao">
+
+    <resultMap type="io.renren.modules.question.entity.PosterQuestionsEntity" id="posterQuestionsMap">
+        <result property="id" column="id"/>
+        <result property="posterId" column="poster_id"/>
+        <result property="questionContent" column="question_content"/>
+        <result property="choices" column="choices"/>
+        <result property="answer" column="answer"/>
+    </resultMap>
+
+
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.message.dao.PosterMessagesDao">
+
+    <resultMap type="io.renren.modules.message.entity.PosterMessagesEntity" id="posterMessagesMap">
+        <result property="id" column="id"/>
+        <result property="schoolId" column="school_id"/>
+        <result property="messageTitle" column="message_title"/>
+        <result property="messageContent" column="message_content"/>
+        <result property="receiverUid" column="receiver_uid"/>
+        <result property="sendTime" column="send_time"/>
+        <result property="isOfficial" column="is_official"/>
+        <result property="isRead" column="is_read"/>
+        <result property="receivedUid" column="received_uid"/>
+    </resultMap>
+
+
+</mapper>
