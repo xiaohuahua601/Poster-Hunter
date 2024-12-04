@@ -19,4 +19,8 @@ public class PosterSchoolsEntity {
      * 学校ID
      */
 	private String id;
+    /**
+     * 学校名称
+     */
+    private String unvname;
 }

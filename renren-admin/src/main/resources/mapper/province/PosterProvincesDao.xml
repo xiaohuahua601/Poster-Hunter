@@ -6,6 +6,7 @@
     <resultMap type="io.renren.modules.province.entity.PosterProvincesEntity" id="posterProvincesMap">
         <result property="id" column="id"/>
         <result property="schoolId" column="school_id"/>
+        <result property="provname" column="provname"/>
     </resultMap>
 
 

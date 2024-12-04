@@ -2,7 +2,7 @@
   <div class="mod-message__postermessages">
     <el-form :inline="true" :model="state.dataForm" @keyup.enter="state.getDataList()">
       <el-form-item>
-        <el-button v-if="state.hasPermission('message:postermessages:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="state.hasPermission('message:postermessages:save')" type="primary" @click="addOrUpdateHandle(false)">新增</el-button>
       </el-form-item>
       <el-form-item>
         <el-button v-if="state.hasPermission('message:postermessages:delete')" type="danger" @click="state.deleteHandle()">删除</el-button>
@@ -21,7 +21,7 @@
               <el-table-column prop="receivedUid" label="已接受者ID列表" header-align="center" align="center"></el-table-column>
             <el-table-column label="操作" fixed="right" header-align="center" align="center" width="150">
         <template v-slot="scope">
-          <el-button v-if="state.hasPermission('message:postermessages:update')" type="primary" link @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
+          <el-button v-if="state.hasPermission('message:postermessages:update')" type="primary" link @click="addOrUpdateHandle(true, scope.row.id)">修改</el-button>
           <el-button v-if="state.hasPermission('message:postermessages:delete')" type="primary" link @click="state.deleteHandle(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
@@ -48,7 +48,8 @@ const view = reactive({
 const state = reactive({ ...useView(view), ...toRefs(view) });
 
 const addOrUpdateRef = ref();
-const addOrUpdateHandle = (id?: number) => {
-  addOrUpdateRef.value.init(id);
+// 新增或修改触发方法
+const addOrUpdateHandle = (isEdit: boolean, id?: number) => {
+  addOrUpdateRef.value.init(isEdit, id);
 };
 </script>

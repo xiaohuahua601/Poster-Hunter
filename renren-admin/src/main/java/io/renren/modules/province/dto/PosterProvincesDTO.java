@@ -22,8 +22,10 @@ public class PosterProvincesDTO implements Serializable {
 	@SchemaProperty(name = "省份ID")
 	private String id;
 
+	@SchemaProperty(name = "省份名称")
+	private String provname;
+
 	@SchemaProperty(name = "学校ID")
 	private String schoolId;
-
 
 }

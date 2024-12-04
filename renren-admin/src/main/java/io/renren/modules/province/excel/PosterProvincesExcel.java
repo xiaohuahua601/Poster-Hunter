@@ -18,6 +18,8 @@ import java.util.Date;
 public class PosterProvincesExcel {
     @ExcelProperty(value = "省份ID")
     private String id;
+    @ExcelProperty(value = "省份名称")
+    private String provname;
     @ExcelProperty(value = "学校ID")
     private String schoolId;
 

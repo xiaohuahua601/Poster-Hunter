@@ -2,7 +2,7 @@
   <el-dialog v-model="visible" :title="isEdit ? '修改' : '新增'" :close-on-click-modal="true" :close-on-press-escape="false">
     <el-form :model="dataForm" :rules="rules" ref="dataFormRef" @keyup.enter="dataFormSubmitHandle" label-width="120px">
       <el-form-item label="用户ID" prop="id">
-        <el-input v-model="dataForm.id" placeholder="用户ID" :disabled="false"></el-input>
+        <el-input v-model="dataForm.id" placeholder="用户ID" :disabled="isEdit"></el-input>
       </el-form-item>
       <el-form-item label="用户身份" prop="identity">
         <el-input v-model="dataForm.identity" placeholder="用户身份"></el-input>
@@ -47,7 +47,7 @@ const dataForm = reactive({
   id: '', identity: '', mobilePhoneNumber: '', nickname: '', password: '', isAdmin: '', isOnline: '', schoolId: ''
 });
 
-const rules = reactive({
+const rules = ref({
   id: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
   identity: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
   mobilePhoneNumber: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
@@ -58,13 +58,21 @@ const rules = reactive({
   schoolId: [{ required: true, message: '必填项不能为空', trigger: 'blur' }]
 });
 
-// 初始化新增或修改
+// 初始化弹窗：新增或修改
 const init = (edit: boolean, id?: number) => {
   visible.value = true;
   isEdit.value = edit;
-  if (edit) {
-    dataForm.id = id.toString();
-    getInfo(id);
+
+  // 清空表单数据
+  if (dataFormRef.value) {
+    dataFormRef.value.resetFields();
+  }
+
+  if (edit && id) {
+    // 修改时加载数据
+    baseService.get(`/user/posterusers/${id}`).then((res) => {
+      Object.assign(dataForm, res.data);
+    });
   } else {
     // 新增时清空表单字段
     dataForm.id = '';
@@ -81,30 +89,26 @@ const init = (edit: boolean, id?: number) => {
   }
 };
 
-// 获取编辑时的数据
-const getInfo = (id: number) => {
-  baseService.get("/user/posterusers/" + id).then((res) => {
-    Object.assign(dataForm, res.data);
+// 提交表单：新增或修改
+const dataFormSubmitHandle = () => {
+  dataFormRef.value.validate((valid: boolean) => {
+    if (!valid) return;
+
+    const method = isEdit.value ? baseService.put : baseService.post;
+    const url = "/user/posterusers";
+
+    method(url, dataForm)
+      .then(() => {
+        ElMessage.success(`${isEdit.value ? "修改" : "新增"}成功`);
+        visible.value = false; // 关闭弹窗
+        emit("refreshDataList"); // 刷新列表
+      })
+      .catch((err) => {
+        ElMessage.error(err.message || "操作失败");
+      });
   });
 };
 
-// 提交表单
-const dataFormSubmitHandle = () => {
-  dataFormRef.value.validate((valid: boolean) => {
-    if (!valid) {
-      ElMessage.error('表单验证失败');
-      return false;
-    }
-    const method = isEdit.value ? baseService.put : baseService.post;
-    method("/user/posterusers", dataForm).then(() => {
-      ElMessage.success(isEdit.value ? '更新成功' : '新增成功');
-      visible.value = false;
-      emit("refreshDataList");
-    }).catch((error) => {
-      ElMessage.error('操作失败: ' + error.message);
-    });
-  });
-};
 
 defineExpose({
   init

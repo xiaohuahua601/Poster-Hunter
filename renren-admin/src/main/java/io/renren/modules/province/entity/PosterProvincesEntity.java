@@ -20,7 +20,12 @@ public class PosterProvincesEntity {
      */
 	private String id;
     /**
+     * 省份名称
+     */
+    private String provname;
+    /**
      * 学校ID
      */
 	private String schoolId;
+
 }

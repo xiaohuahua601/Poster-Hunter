@@ -5,6 +5,7 @@
 
     <resultMap type="io.renren.modules.school.entity.PosterSchoolsEntity" id="posterSchoolsMap">
         <result property="id" column="id"/>
+        <result property="unvname" column="unvname"/>
     </resultMap>
 
 

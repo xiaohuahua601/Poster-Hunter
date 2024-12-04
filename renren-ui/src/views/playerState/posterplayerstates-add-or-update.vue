@@ -1,6 +1,9 @@
 <template>
-  <el-dialog v-model="visible" :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false" :close-on-press-escape="false">
+  <el-dialog v-model="visible" :title="isEdit ? '修改' : '新增'" :close-on-click-modal="false" :close-on-press-escape="false">
     <el-form :model="dataForm" :rules="rules" ref="dataFormRef" @keyup.enter="dataFormSubmitHandle()" label-width="120px">
+      <el-form-item label="用户ID" prop="id">
+        <el-input v-model="dataForm.id" placeholder="用户ID" :disabled="isEdit"></el-input>
+      </el-form-item>
           <el-form-item label="硬币数量" prop="coins">
         <el-input v-model="dataForm.coins" placeholder="硬币数量"></el-input>
       </el-form-item>
@@ -68,101 +71,120 @@ const emit = defineEmits(["refreshDataList"]);
 
 const visible = ref(false);
 const dataFormRef = ref();
+const isEdit = ref(false); // 是否为修改操作
 
 const dataForm = reactive({
   id: '',  coins: '',  hunterLevel: '',  hunterExp: '',  posterCompleted: '',  morality: '',  intelligence: '',  physical: '',  aesthetic: '',  labor: '',  up: '',  down: '',  moveLeft: '',  moveRight: '',  interact: '',  friendsUid: '',  volume: '',  pickedPostersId: ''});
 
 const rules = ref({
-          coins: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ],
-          hunterLevel: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ],
-          hunterExp: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ],
-          posterCompleted: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ],
-          morality: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ],
-          intelligence: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ],
-          physical: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ],
-          aesthetic: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ],
-          labor: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ],
-          up: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ],
-          down: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ],
-          moveLeft: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ],
-          moveRight: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ],
-          interact: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ],
-          friendsUid: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ],
-          volume: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ],
-          pickedPostersId: [
-      { required: true, message: '必填项不能为空', trigger: 'blur' }
-    ]
+          id: [{ required: true, message: "用户ID不能为空", trigger: "blur" }],
+    //       coins: [
+    //   { required: true, message: '必填项不能为空', trigger: 'blur' }
+    // ],
+    //       hunterLevel: [
+    //   { required: true, message: '必填项不能为空', trigger: 'blur' }
+    // ],
+    //       hunterExp: [
+    //   { required: true, message: '必填项不能为空', trigger: 'blur' }
+    // ],
+    //       posterCompleted: [
+    //   { required: true, message: '必填项不能为空', trigger: 'blur' }
+    // ],
+    //       morality: [
+    //   { required: true, message: '必填项不能为空', trigger: 'blur' }
+    // ],
+    //       intelligence: [
+    //   { required: true, message: '必填项不能为空', trigger: 'blur' }
+    // ],
+    //       physical: [
+    //   { required: true, message: '必填项不能为空', trigger: 'blur' }
+    // ],
+    //       aesthetic: [
+    //   { required: true, message: '必填项不能为空', trigger: 'blur' }
+    // ],
+    //       labor: [
+    //   { required: true, message: '必填项不能为空', trigger: 'blur' }
+    // ],
+    //       up: [
+    //   { required: true, message: '必填项不能为空', trigger: 'blur' }
+    // ],
+    //       down: [
+    //   { required: true, message: '必填项不能为空', trigger: 'blur' }
+    // ],
+    //       moveLeft: [
+    //   { required: true, message: '必填项不能为空', trigger: 'blur' }
+    // ],
+    //       moveRight: [
+    //   { required: true, message: '必填项不能为空', trigger: 'blur' }
+    // ],
+    //       interact: [
+    //   { required: true, message: '必填项不能为空', trigger: 'blur' }
+    // ],
+    //       friendsUid: [
+    //   { required: true, message: '必填项不能为空', trigger: 'blur' }
+    // ],
+    //       volume: [
+    //   { required: true, message: '必填项不能为空', trigger: 'blur' }
+    // ],
+    //       pickedPostersId: [
+    //   { required: true, message: '必填项不能为空', trigger: 'blur' }
+    // ]
   });
 
-const init = (id?: number) => {
+// 初始化弹窗：新增或修改
+const init = (edit: boolean, id?: number) => {
   visible.value = true;
-  dataForm.id = "";
+  isEdit.value = edit;
 
-  // 重置表单数据
+  // 清空表单数据
   if (dataFormRef.value) {
     dataFormRef.value.resetFields();
   }
 
-  if (id) {
-    getInfo(id);
+  if (edit && id) {
+    // 修改时加载数据
+    baseService.get(`/playerState/posterplayerstates/${id}`).then((res) => {
+      Object.assign(dataForm, res.data);
+    });
+  } else {
+    // 新增时清空表单
+    dataForm.id = "";
+    dataForm.coins = "";
+    dataForm.hunterLevel = "";
+    dataForm.hunterExp = "";
+    dataForm.posterCompleted = "";
+    dataForm.morality = "";
+    dataForm.intelligence = "";
+    dataForm.physical = "";
+    dataForm.aesthetic = "";
+    dataForm.labor = "";
+    dataForm.up = "";
+    dataForm.down = "";
+    dataForm.moveLeft = "";
+    dataForm.moveRight = "";
+    dataForm.interact = "";
+    dataForm.friendsUid = "";
+    dataForm.volume = "";
+    dataForm.pickedPostersId = "";
   }
 };
-
-// 获取信息
-const getInfo = (id: number) => {
-  baseService.get("/playerState/posterplayerstates/" + id).then((res) => {
-    Object.assign(dataForm, res.data);
-  });
-};
-
-// 表单提交
+// 提交表单：新增或修改
 const dataFormSubmitHandle = () => {
   dataFormRef.value.validate((valid: boolean) => {
-    if (!valid) {
-      return false;
-    }
-    (!dataForm.id ? baseService.post : baseService.put)("/playerState/posterplayerstates", dataForm).then((res) => {
-      ElMessage.success({
-        message: '成功',
-        duration: 500,
-        onClose: () => {
-          visible.value = false;
-          emit("refreshDataList");
-        }
+    if (!valid) return;
+
+    const method = isEdit.value ? baseService.put : baseService.post;
+    const url = "/playerState/posterplayerstates";
+
+    method(url, dataForm)
+      .then(() => {
+        ElMessage.success(`${isEdit.value ? "修改" : "新增"}成功`);
+        visible.value = false; // 关闭弹窗
+        emit("refreshDataList"); // 刷新列表
+      })
+      .catch((err) => {
+        ElMessage.error(err.message || "操作失败");
       });
-    });
   });
 };
 

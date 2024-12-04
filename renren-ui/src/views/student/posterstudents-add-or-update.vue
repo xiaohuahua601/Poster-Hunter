@@ -4,22 +4,22 @@
       :model="dataForm"
       :rules="rules"
       ref="dataFormRef"
-      @keyup.enter="dataFormSubmitHandle"
+      @keyup.enter="dataFormSubmitHandle()"
       label-width="120px"
     >
       <el-form-item label="用户ID" prop="id">
-        <el-input v-model="dataForm.id" placeholder="请输入用户ID" :disabled="isEdit"></el-input>
+        <el-input v-model="dataForm.id" placeholder="用户ID" :disabled="isEdit"></el-input>
       </el-form-item>
       <el-form-item label="学号" prop="studentId">
-        <el-input v-model="dataForm.studentId" placeholder="请输入学号"></el-input>
+        <el-input v-model="dataForm.studentId" placeholder="学号"></el-input>
       </el-form-item>
       <el-form-item label="家长ID" prop="parentsUid">
-        <el-input v-model="dataForm.parentsUid" placeholder="请输入家长ID"></el-input>
+        <el-input v-model="dataForm.parentsUid" placeholder="家长ID"></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
       <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" @click="dataFormSubmitHandle">确定</el-button>
+      <el-button type="primary" @click="dataFormSubmitHandle()">确定</el-button>
     </template>
   </el-dialog>
 </template>
@@ -41,7 +41,7 @@ const dataForm = reactive({
   parentsUid: ""
 });
 
-const rules = reactive({
+const rules = ref({
   id: [{ required: true, message: "用户ID不能为空", trigger: "blur" }],
   studentId: [{ required: true, message: "学号不能为空", trigger: "blur" }],
   parentsUid: [{ required: true, message: "家长ID不能为空", trigger: "blur" }]

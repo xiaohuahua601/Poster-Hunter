@@ -22,5 +22,7 @@ public class PosterSchoolsDTO implements Serializable {
 	@SchemaProperty(name = "学校ID")
 	private String id;
 
+	@SchemaProperty(name = "学校名称")
+	private String unvname;
 
 }

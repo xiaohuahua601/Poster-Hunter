@@ -5,16 +5,10 @@
         <el-button v-if="state.hasPermission('user:posterusers:save')" type="primary" @click="addOrUpdateHandle(false)">新增</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button v-if="state.hasPermission('user:posterusers:delete')" type="danger" @click="state.deleteHandle">删除</el-button>
+        <el-button v-if="state.hasPermission('user:posterusers:delete')" type="danger" @click="state.deleteHandle()">删除</el-button>
       </el-form-item>
     </el-form>
-    <el-table
-      v-loading="state.dataListLoading"
-      :data="state.dataList"
-      border
-      @selection-change="state.dataListSelectionChangeHandle"
-      style="width: 100%"
-    >
+    <el-table v-loading="state.dataListLoading" :data="state.dataList" border @selection-change="state.dataListSelectionChangeHandle" style="width: 100%">
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
       <el-table-column prop="id" label="用户ID" header-align="center" align="center"></el-table-column>
       <el-table-column prop="identity" label="用户身份" header-align="center" align="center"></el-table-column>
@@ -26,8 +20,8 @@
       <el-table-column prop="schoolId" label="所在学校ID" header-align="center" align="center"></el-table-column>
       <el-table-column label="操作" fixed="right" header-align="center" align="center" width="150">
         <template v-slot="scope">
+          <el-button v-if="state.hasPermission('user:posterusers:save')" type="primary" link @click="addOrUpdateHandle(true, scope.row.id)">修改</el-button>
           <el-button v-if="state.hasPermission('user:posterusers:delete')" type="primary" link @click="state.deleteHandle(scope.row.id)">删除</el-button>
-          <el-button v-if="state.hasPermission('user:posterusers:save')" type="primary" link @click="handleRowClick(scope.row)">修改</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -52,13 +46,7 @@ const view = reactive({
 const state = reactive({ ...useView(view), ...toRefs(view) });
 
 const addOrUpdateRef = ref();
-
-// 处理点击修改按钮
-const handleRowClick = (row) => {
-  addOrUpdateHandle(true, row.id);
-};
-
-// 初始化新增或修改
+// 新增或修改触发方法
 const addOrUpdateHandle = (isEdit: boolean, id?: number) => {
   addOrUpdateRef.value.init(isEdit, id);
 };
