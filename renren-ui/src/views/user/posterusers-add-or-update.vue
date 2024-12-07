@@ -5,7 +5,11 @@
         <el-input v-model="dataForm.id" placeholder="用户ID" :disabled="isEdit"></el-input>
       </el-form-item>
       <el-form-item label="用户身份" prop="identity">
-        <el-input v-model="dataForm.identity" placeholder="用户身份"></el-input>
+        <el-select v-model="dataForm.identity" placeholder="选择用户身份">
+          <el-option label="student" value="student"></el-option>
+          <el-option label="visitor" value="visitor"></el-option>
+          <el-option label="teacher" value="teacher"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="手机号" prop="mobilePhoneNumber">
         <el-input v-model="dataForm.mobilePhoneNumber" placeholder="手机号"></el-input>
