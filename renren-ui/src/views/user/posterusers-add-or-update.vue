@@ -8,9 +8,15 @@
         <el-select v-model="dataForm.identity" placeholder="选择用户身份">
           <el-option label="student" value="student"></el-option>
           <el-option label="visitor" value="visitor"></el-option>
-          <el-option label="teacher" value="teacher"></el-option>
+          <el-option label="faculty" value="faculty"></el-option>
         </el-select>
       </el-form-item>
+          <el-form-item v-if="dataForm.identity === 'student'" label="学号" prop="studentId">
+            <el-input v-model="dataForm.studentId" placeholder="学号"></el-input>
+          </el-form-item>
+          <el-form-item v-if="dataForm.identity === 'faculty'" label="教职工编号" prop="facultyId">
+            <el-input v-model="dataForm.facultyId" placeholder="教职工编号"></el-input>
+          </el-form-item>
       <el-form-item label="手机号" prop="mobilePhoneNumber">
         <el-input v-model="dataForm.mobilePhoneNumber" placeholder="手机号"></el-input>
       </el-form-item>
@@ -48,12 +54,23 @@ const dataFormRef = ref();
 const isEdit = ref(false);
 
 const dataForm = reactive({
-  id: '', identity: '', mobilePhoneNumber: '', nickname: '', password: '', isAdmin: '', isOnline: '', schoolId: ''
+  id: '', 
+  identity: '', 
+  studentId: "", 
+  facultyId: '', 
+  mobilePhoneNumber: '', 
+  nickname: '', 
+  password: '', 
+  isAdmin: '', 
+  isOnline: '',
+  schoolId: ''
 });
 
 const rules = ref({
   id: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
   identity: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+  studentId: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+  facultyId: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
   mobilePhoneNumber: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
   nickname: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
   password: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
@@ -81,6 +98,8 @@ const init = (edit: boolean, id?: number) => {
     // 新增时清空表单字段
     dataForm.id = '';
     dataForm.identity = '';
+    dataForm.studentId = '', 
+    dataForm.facultyId = '', 
     dataForm.mobilePhoneNumber = '';
     dataForm.nickname = '';
     dataForm.password = '';
@@ -100,17 +119,63 @@ const dataFormSubmitHandle = () => {
 
     const method = isEdit.value ? baseService.put : baseService.post;
     const url = "/user/posterusers";
+    const url1 = "/student/posterstudents";
+    const url2 = "/faculty/posterfaculties";
+    const url3 = "/visitor/postervisitors";
 
-    method(url, dataForm)
-      .then(() => {
-        ElMessage.success(`${isEdit.value ? "修改" : "新增"}成功`);
-        visible.value = false; // 关闭弹窗
-        emit("refreshDataList"); // 刷新列表
-      })
-      .catch((err) => {
-        ElMessage.error(err.message || "操作失败");
-      });
-  });
+      method(url, dataForm)
+        .then(() => {
+          ElMessage.success(`${isEdit.value ? "修改" : "新增"}成功`);
+          visible.value = false; // 关闭弹窗
+          emit("refreshDataList"); // 刷新列表
+          const dataForm1 = {
+            id: dataForm.id,
+            studentId: dataForm.studentId
+          };
+          const dataForm2 = {
+            id: dataForm.id,
+            facultyId: dataForm.facultyId
+          };
+          const dataForm3 = {
+            id: dataForm.id,
+          };
+// console.log(dataForm.id + " ********** " + dataForm3.id );
+// console.log(dataForm.studentId + " ********** " + dataForm1.studentId );
+
+          setTimeout(() => {
+            if (dataForm.identity == "student") {
+              method(url1, dataForm1)
+                .then(() => {
+                  ElMessage.success(`${isEdit.value ? "修改" : "新增"}关联成功`);
+                })
+                .catch((err) => {
+                  ElMessage.error(err.message || "关联操作失败");
+                });
+            }
+            else if(dataForm.identity == "faculty") {
+              method(url2, dataForm2)
+              .then(() => {
+                ElMessage.success(`${isEdit.value ? "修改" : "新增"}关联成功`);
+              })              
+              .catch((err) => {
+                ElMessage.error(err.message || "关联操作失败");
+              });
+            }
+            else if(dataForm.identity == "visitor") {
+              method(url3, dataForm3)
+              .then(() => {
+                ElMessage.success(`${isEdit.value ? "修改" : "新增"}关联成功`);
+              })
+              .catch((err) => {
+                ElMessage.error(err.message || "关联操作失败");
+              });
+            }
+          }, 1000); // 3000毫秒后更新
+        })
+        .catch((err) => {
+          ElMessage.error(err.message || "操作失败");
+        });
+    });
 };
 
 
@@ -118,3 +183,5 @@ defineExpose({
   init
 });
 </script>
+
+

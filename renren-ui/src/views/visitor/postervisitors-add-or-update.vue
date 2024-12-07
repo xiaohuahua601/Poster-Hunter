@@ -23,11 +23,12 @@ const dataFormRef = ref();
 const isEdit = ref(false); // 是否为修改操作
 
 const dataForm = reactive({
-  id: ''});
+  id: ''
+});
 
 const rules = ref({
         id: [{ required: true, message: "用户ID不能为空", trigger: "blur" }],
-  });
+});
 
 // 初始化弹窗：新增或修改
 const init = (edit: boolean, id?: number) => {

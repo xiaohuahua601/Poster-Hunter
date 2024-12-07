@@ -26,7 +26,8 @@ const dataFormRef = ref();
 const isEdit = ref(false); // 是否为修改操作
 
 const dataForm = reactive({
-  id: '',  facultyId: ''});
+  id: '',  facultyId: ''
+});
 
 const rules = ref({
           id: [{ required: true, message: "用户ID不能为空", trigger: "blur" }],
