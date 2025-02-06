@@ -1,8 +1,12 @@
 package io.renren.modules.user.service;
 
+import io.renren.common.page.PageData;
 import io.renren.common.service.CrudService;
+import io.renren.modules.sys.dto.SysUserDTO;
 import io.renren.modules.user.dto.PosterUsersDTO;
 import io.renren.modules.user.entity.PosterUsersEntity;
+
+import java.util.Map;
 
 /**
  * 用户管理
@@ -11,5 +15,6 @@ import io.renren.modules.user.entity.PosterUsersEntity;
  * @since 1.0.0 2024-12-03
  */
 public interface PosterUsersService extends CrudService<PosterUsersEntity, PosterUsersDTO> {
+    PageData<PosterUsersDTO> page(Map<String, Object> params);
 
 }

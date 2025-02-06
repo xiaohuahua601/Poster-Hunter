@@ -97,6 +97,44 @@ public abstract class BaseServiceImpl<M extends BaseMapper<T>, T> implements Bas
         return page;
     }
 
+    /**
+     * 获取分页对象(只需传入参数)
+     * @param params      分页查询参数
+     */
+    protected IPage<T> getPage(Map<String, Object> params) {
+        // 分页参数
+        long curPage = 1;
+        long limit = 10;
+
+        if (params.get(Constant.PAGE) != null) {
+            curPage = Long.parseLong((String) params.get(Constant.PAGE));
+        }
+        if (params.get(Constant.LIMIT) != null) {
+            limit = Long.parseLong((String) params.get(Constant.LIMIT));
+        }
+
+        // 分页对象
+        Page<T> page = new Page<>(curPage, limit);
+
+        // 分页参数
+        params.put(Constant.PAGE, page);
+
+        // 排序字段
+        String orderField = (String) params.get(Constant.ORDER_FIELD);
+        String order = (String) params.get(Constant.ORDER);
+
+        // 前端字段排序
+        if (StrUtil.isNotBlank(orderField) && StrUtil.isNotBlank(order)) {
+            if (Constant.ASC.equalsIgnoreCase(order)) {
+                page.addOrder(OrderItem.asc(orderField));
+            } else {
+                page.addOrder(OrderItem.desc(orderField));
+            }
+        }
+
+        return page;
+    }
+
     protected <T> PageData<T> getPageData(List<?> list, long total, Class<T> target) {
         List<T> targetList = ConvertUtils.sourceToTarget(list, target);
 

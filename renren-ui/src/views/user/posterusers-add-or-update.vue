@@ -4,12 +4,15 @@
       <el-form-item label="用户ID" prop="id">
         <el-input v-model="dataForm.id" placeholder="用户ID" :disabled="isEdit"></el-input>
       </el-form-item>
-      <el-form-item label="用户身份" prop="identity">
+      <!-- <el-form-item label="用户身份" prop="identity">
         <el-select v-model="dataForm.identity" placeholder="选择用户身份">
           <el-option label="student" value="student"></el-option>
           <el-option label="visitor" value="visitor"></el-option>
           <el-option label="faculty" value="faculty"></el-option>
         </el-select>
+      </el-form-item> -->
+      <el-form-item prop="identity" label="性别">
+        <ren-radio-group v-model="dataForm.identity" dict-type="identity"></ren-radio-group>
       </el-form-item>
           <el-form-item v-if="dataForm.identity === 'student'" label="学号" prop="studentId">
             <el-input v-model="dataForm.studentId" placeholder="学号"></el-input>

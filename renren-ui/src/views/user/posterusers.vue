@@ -1,6 +1,22 @@
 <template>
   <div class="mod-user__posterusers">
-    <el-form :inline="true" :model="state.dataForm" @keyup.enter="state.getDataList">
+    <el-form :inline="true" :model="state.dataForm" @keyup.enter="state.getDataList()">
+      <el-form-item>
+        <ren-select v-model="state.dataForm.identity" dict-type="identity" placeholder="用户身份"></ren-select>
+      </el-form-item>
+      <!-- <ren-select v-model="state.dataForm.identity" dict-type="identity" placeholder="用户身份">
+        <template v-slot:default>
+          <option v-for="item in state.getDictList('identity')" :key="item.value" :value="item.value">
+            {{ item.label }}
+          </option>
+        </template>
+      </ren-select> -->
+      <el-form-item>
+        <el-input v-model="state.dataForm.nickname" placeholder="昵称" clearable></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button @click="state.getDataList()">查询</el-button>
+      </el-form-item>
       <el-form-item>
         <el-button v-if="state.hasPermission('user:posterusers:save')" type="primary" @click="addOrUpdateHandle(false)">新增</el-button>
       </el-form-item>
@@ -11,7 +27,11 @@
     <el-table v-loading="state.dataListLoading" :data="state.dataList" border @selection-change="state.dataListSelectionChangeHandle" style="width: 100%">
       <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
       <el-table-column prop="id" label="用户ID" header-align="center" align="center"></el-table-column>
-      <el-table-column prop="identity" label="用户身份" header-align="center" align="center"></el-table-column>
+      <el-table-column prop="identity" label="用户身份" header-align="center" align="center">
+        <template v-slot="scope">
+          {{ state.getDictLabel("identity", scope.row.identity) }}
+        </template>
+      </el-table-column>
       <el-table-column prop="mobilePhoneNumber" label="手机号" header-align="center" align="center"></el-table-column>
       <el-table-column prop="nickname" label="用户昵称" header-align="center" align="center"></el-table-column>
       <el-table-column prop="password" label="密码" header-align="center" align="center"></el-table-column>
@@ -19,6 +39,7 @@
       <el-table-column prop="isOnline" label="是否在线" header-align="center" align="center"></el-table-column>
       <el-table-column prop="schoolId" label="所在学校ID" header-align="center" align="center"></el-table-column>
       <el-table-column label="操作" fixed="right" header-align="center" align="center" width="150">
+        
         <template v-slot="scope">
           <el-button v-if="state.hasPermission('user:posterusers:save')" type="primary" link @click="addOrUpdateHandle(true, scope.row.id)">修改</el-button>
           <el-button v-if="state.hasPermission('user:posterusers:delete')" type="primary" link @click="state.deleteHandle(scope.row.id)">删除</el-button>
@@ -40,10 +61,17 @@ const view = reactive({
   getDataListURL: "/user/posterusers/page",
   getDataListIsPage: true,
   exportURL: "/user/posterusers/export",
-  deleteURL: "/user/posterusers"
+  deleteURL: "/user/posterusers",
+  dataForm: {
+    identity: "",
+    nickname: ""
+  }
 });
 
-const state = reactive({ ...useView(view), ...toRefs(view) });
+const state = reactive({ 
+  ...useView(view), 
+  ...toRefs(view)
+});
 
 const addOrUpdateRef = ref();
 // 新增或修改触发方法

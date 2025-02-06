@@ -20,7 +20,7 @@ public class PosterUsersEntity {
      */
 	private String id;
     /**
-     * 用户身份
+     * 用户身份   student：学生   faculty：教师    visitor：访客
      */
 	private String identity;
     /**

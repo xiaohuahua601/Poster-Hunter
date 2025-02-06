@@ -46,6 +46,8 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserDao, SysUserEntit
 
     @Override
     public PageData<SysUserDTO> page(Map<String, Object> params) {
+//        log.debug("Params: " + params.toString());
+
         //转换成like
         paramsToLike(params, "username");
 

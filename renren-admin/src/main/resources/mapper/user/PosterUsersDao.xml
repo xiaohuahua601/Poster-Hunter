@@ -14,5 +14,17 @@
         <result property="schoolId" column="school_id"/>
     </resultMap>
 
+    <!-- 查询用户列表 -->
+    <select id="getList" resultType="io.renren.modules.user.entity.PosterUsersEntity">
+        SELECT t1.*
+        FROM poster_users t1
+        WHERE 1=1
+        <if test="identity != null and identity.trim() != ''">
+            and t1.identity = #{identity}
+        </if>
+        <if test="nickname != null and nickname.trim() != ''">
+            and t1.nickname like #{nickname}
+        </if>
+    </select>
 
 </mapper>

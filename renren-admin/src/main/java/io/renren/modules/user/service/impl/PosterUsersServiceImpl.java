@@ -1,7 +1,13 @@
 package io.renren.modules.user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.renren.common.constant.Constant;
+import io.renren.common.page.PageData;
 import io.renren.common.service.impl.CrudServiceImpl;
+import io.renren.modules.security.user.SecurityUser;
+import io.renren.modules.security.user.UserDetail;
+import io.renren.modules.sys.enums.SuperAdminEnum;
 import io.renren.modules.user.dao.PosterUsersDao;
 import io.renren.modules.user.dto.PosterUsersDTO;
 import io.renren.modules.user.entity.PosterUsersEntity;
@@ -9,6 +15,7 @@ import io.renren.modules.user.service.PosterUsersService;
 import cn.hutool.core.util.StrUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,6 +36,21 @@ public class PosterUsersServiceImpl extends CrudServiceImpl<PosterUsersDao, Post
 
         return wrapper;
     }
+    @Override
+    public PageData<PosterUsersDTO> page(Map<String, Object> params) {
+        // 打印 params 内容
+//        log.debug("Params: " + params.toString());
 
+        // 转换成模糊匹配
+        paramsToLike(params, "nickname");
+
+        // 分页
+        IPage<PosterUsersEntity> page = getPage(params);
+
+        // 查询
+        List<PosterUsersEntity> list = baseDao.getList(params);
+
+        return getPageData(list, page.getTotal(), PosterUsersDTO.class);
+    }
 
 }
