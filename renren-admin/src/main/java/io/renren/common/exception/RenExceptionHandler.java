@@ -20,7 +20,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Map;
@@ -58,6 +61,8 @@ public class RenExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
+//    @ResponseBody
+//    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Result handleException(Exception ex) {
         log.error(ex.getMessage(), ex);
 

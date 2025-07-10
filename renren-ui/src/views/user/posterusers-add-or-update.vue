@@ -57,14 +57,14 @@ const dataFormRef = ref();
 const isEdit = ref(false);
 
 const dataForm = reactive({
-  id: '', 
-  identity: '', 
-  studentId: "", 
-  facultyId: '', 
-  mobilePhoneNumber: '', 
-  nickname: '', 
-  password: '', 
-  isAdmin: '', 
+  id: '',
+  identity: '',
+  studentId: "",
+  facultyId: '',
+  mobilePhoneNumber: '',
+  nickname: '',
+  password: '',
+  isAdmin: '',
   isOnline: '',
   schoolId: ''
 });
@@ -101,8 +101,8 @@ const init = (edit: boolean, id?: number) => {
     // 新增时清空表单字段
     dataForm.id = '';
     dataForm.identity = '';
-    dataForm.studentId = '', 
-    dataForm.facultyId = '', 
+    dataForm.studentId = '',
+    dataForm.facultyId = '',
     dataForm.mobilePhoneNumber = '';
     dataForm.nickname = '';
     dataForm.password = '';
@@ -159,7 +159,7 @@ const dataFormSubmitHandle = () => {
               method(url2, dataForm2)
               .then(() => {
                 ElMessage.success(`${isEdit.value ? "修改" : "新增"}关联成功`);
-              })              
+              })
               .catch((err) => {
                 ElMessage.error(err.message || "关联操作失败");
               });
@@ -173,7 +173,7 @@ const dataFormSubmitHandle = () => {
                 ElMessage.error(err.message || "关联操作失败");
               });
             }
-          }, 1000); // 3000毫秒后更新
+          }, 1000); // 1000毫秒后更新
         })
         .catch((err) => {
           ElMessage.error(err.message || "操作失败");
