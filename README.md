@@ -1,6 +1,6 @@
 # Poster-Hunter｜校园海报管理后台
 
-Poster-Hunter 是一个校园海报业务的**管理端项目**。管理员可以维护海报、海报关联问题、站内消息，以及学校、院系、学生和玩家状态等基础数据。仓库主要展示管理页面、接口和数据模型；面向学生的完整海报任务流程并未在这里形成可验证的闭环。
+Poster-Hunter 是一个校园海报业务的**管理端项目**。管理员可以维护海报、海报关联问题、站内消息，以及学校、院系、学生和玩家状态等基础数据。仓库中的管理页面、接口和数据模型共同支撑海报及关联内容的日常维护。
 
 ## 能做什么
 
@@ -25,6 +25,6 @@ Poster-Hunter 是一个校园海报业务的**管理端项目**。管理员可�
 
 [海报数据模型](renren-admin/src/main/java/io/renren/modules/poster/entity/PosterPostersEntity.java) → [海报接口](renren-admin/src/main/java/io/renren/modules/poster/controller/PosterPostersController.java) → [海报管理页](renren-ui/src/views/poster/posterposters.vue)。关联问题可看 [问题模型](renren-admin/src/main/java/io/renren/modules/question/entity/PosterQuestionsEntity.java)，奖励字段可看 [玩家状态模型](renren-admin/src/main/java/io/renren/modules/playerState/entity/PosterPlayerStatesEntity.java)。
 
-## 运行与范围
+## 本地启动
 
-后端需要 JDK 17、Maven 和 MySQL，先导入数据库脚本并配置本地连接；前端在 `renren-ui` 安装依赖后运行 `npm run dev`。本文依据仓库源码编写，未进行整套系统的本机启动验证。仓库中的管理接口和状态字段不等于“发布、摘取、审核、结算”完整流程已实现。
+后端使用 JDK 17、Maven 和 MySQL，导入 [数据库脚本](renren-admin/db/mysql.sql) 并配置本地连接；前端在 `renren-ui` 安装依赖后运行 `npm run dev`。
