@@ -1,8 +1,8 @@
 # Poster-Hunter｜校园海报与悬赏管理后台
 
-> 一个围绕校园海报、问题与奖励数据的管理端项目。仓库在 [renren-security](https://gitee.com/renrenio/renren-security) 后台框架上扩展业务模块，面试阅读重点是这些业务模块及其前后端数据链路。
+> 一个围绕校园海报、问题与奖励数据的管理端项目。仓库在 [renren-security](https://gitee.com/renrenio/renren-security) 后台框架上扩展业务模块，本仓库重点展示这些业务模块及其前后端数据链路。
 
-## 面试官 30 秒了解
+## 项目概览
 
 | 项目要点 | 说明 |
 | --- | --- |
